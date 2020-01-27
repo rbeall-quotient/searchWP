@@ -42,12 +42,15 @@
 
         $content  = '<div style="width: 100%; overflow: hidden;">';
         $content .= $this->get_search_bar();
-        $content .= '<div style="width: 65%; float: left;">';
-        $content .= $this->get_top_nav();
-        $content .= $this->get_object_list();
-        $content .= $this->get_bottom_nav();
-        $content .= '</div>';
-        $content .= '<div style="float: right;"><div>'.$facets->get_content().'</div></div>';
+        if(get_query_var("edan_q") || get_query_var("edanUrl"))
+        {
+          $content .= '<div style="width: 65%; float: left;">';
+          $content .= $this->get_top_nav();
+          $content .= $this->get_object_list();
+          $content .= $this->get_bottom_nav();
+          $content .= '</div>';
+          $content .= '<div style="float: right;"><div>'.$facets->get_content().'</div></div>';
+        }
         $content .= '</div>';
 
         return $content;
@@ -94,14 +97,14 @@
 
       if($firstprev)
       {
-        array_push($navbar, '<a href='.$this->url_handler->list_url(0).'>First</a>');
-        array_push($navbar, '<a href='.$this->url_handler->list_url($info['current']-2).'>Previous</a>');
+        array_push($navbar, '<a href="'.$this->url_handler->list_url(0).'">First</a>');
+        array_push($navbar, '<a href="'.$this->url_handler->list_url($info['current']-2).'">Previous</a>');
       }
 
       if($nextlast)
       {
-        array_push($navbar, '<a href='.$this->url_handler->list_url($info['current']).'>Next</a>');
-        array_push($navbar, '<a href='.$this->url_handler->list_url($info['total']-1).'>Last</a>');
+        array_push($navbar, '<a href="'.$this->url_handler->list_url($info['current']).'">Next</a>');
+        array_push($navbar, '<a href="'.$this->url_handler->list_url($info['total']-1).'">Last</a>');
       }
 
       if($expandall)
@@ -149,8 +152,8 @@
 
       if($firstprev)
       {
-        array_push($navbar, '<a href='.$this->url_handler->list_url(0).'>First</a>');
-        array_push($navbar, '<a href='.$this->url_handler->list_url($info['current']-2).'>Previous</a>');
+        array_push($navbar, '<a href="'.$this->url_handler->list_url(0).'">First</a>');
+        array_push($navbar, '<a href="'.$this->url_handler->list_url($info['current']-2).'">Previous</a>');
       }
 
       if($mindots)
@@ -166,7 +169,7 @@
         }
         else
         {
-          array_push($navbar, '<a href='.$this->url_handler->list_url($page-1).'>' . $page . '</a>');
+          array_push($navbar, '<a href="'.$this->url_handler->list_url($page-1).'">' . $page . '</a>');
         }
       }
 
@@ -177,8 +180,8 @@
 
       if($nextlast)
       {
-        array_push($navbar, '<a href='.$this->url_handler->list_url($info['current']).'>Next</a>');
-        array_push($navbar, '<a href='.$this->url_handler->list_url($info['total']-1).'>Last</a>');
+        array_push($navbar, '<a href="'.$this->url_handler->list_url($info['current']).'">Next</a>');
+        array_push($navbar, '<a href="'.$this->url_handler->list_url($info['total']-1).'">Last</a>');
       }
 
       $content = "";

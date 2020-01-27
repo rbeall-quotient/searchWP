@@ -22,7 +22,8 @@
     ), $atts));
 
     $call = new edan_search_call();
-    $view = new edan_search_view($call->get(process_type_fqs($type)));
+    //$view = new edan_search_view($call->get(process_type_fqs($type)));
+    $view = new edan_search_view($call->get());
 
     return $view->get_content();
   }

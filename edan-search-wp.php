@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: EDAN Search
-  Plugin URI:  https://github.com/rbeall-quotient/edan-search-wp
+  Plugin URI:  https://github.com/rbeall-quotient/searchWP
   Description: EDAN Search WordPress Integration
   Version:     1.0
   Author:      Robert Beall

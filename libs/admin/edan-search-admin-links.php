@@ -3,7 +3,7 @@
    * Register EDAN Search settings link under the plugin listing
    */
 
-  //add ogmt admin settings link
+  //add edan search admin settings link
   add_filter( 'plugin_action_links_edan-search-wp/edan-search-wp.php', 'edan_search_add_action_link' );
 
   /**

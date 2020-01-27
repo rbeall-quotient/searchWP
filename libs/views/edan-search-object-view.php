@@ -13,6 +13,7 @@
     {
       $this->options = new esw_options_handler();
       $this->object = $cache['object'];
+      $this->search = new edan_search_view($cache);
     }
 
     /**
@@ -27,6 +28,7 @@
 
       if($this->object && property_exists($this->object->{'content'}, 'descriptiveNonRepeating'))
       {
+        $content .= $this->search->get_search_bar();
         $content .= '<div class="obj-header">';
 
         if(property_exists($this->object->{'content'}->{'descriptiveNonRepeating'}, 'online_media'))
@@ -35,7 +37,7 @@
           $src = $this->object->{'content'}->{'descriptiveNonRepeating'}->{'online_media'}->{'media'}[0]->{'content'};
           //$content .= "<img src=\"$src\" />";
           $content .= "<br/><div style=\"border-style:solid;border-color:black\"><iframe src=\"$src" . "&container.fullpage&inline=true\" width=\"1500\" height=\"750\"></iframe>";
-          $content .= "<a href=\"$src\">View Full Sized Image</a></div>";
+          $content .= "<a href=\"$src\" target=\"_blank\">View Full Sized Image</a></div>";
         }
 
         $content .= '<hr/></div>';

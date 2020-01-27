@@ -12,7 +12,6 @@
   */
   function edan_search_add_tags()
   {
-    echo "OH god, help me!";
     //EDAN search term
     add_rewrite_tag("%edan_q%", '(.*)');
 

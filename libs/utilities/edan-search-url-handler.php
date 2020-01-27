@@ -93,7 +93,6 @@
 
       $url .= $this->validate_single_vars($vars);
       $url .= $this->validate_fqs(get_query_var('edan_fq'));
-
       return $url;
     }
 

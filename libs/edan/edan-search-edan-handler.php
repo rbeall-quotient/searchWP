@@ -108,7 +108,7 @@
 
     /**
      * Get array containing query vars from url
-     * 
+     *
      * @return array EDAN query vars
      */
     function get_vars()
