@@ -1,6 +1,6 @@
 <?php
   /**
-   * Class that serves content views for object groups depending on passed query vars
+   * Class that serves content views for edan search
    */
   class edan_search_view_manager
   {
@@ -9,7 +9,7 @@
      *
      * if jsonDump passed, print JSON to the page.
      *
-     * @return string object group content
+     * @return string edan search content
      */
     function get_content()
     {
@@ -29,7 +29,7 @@
         }
         else
         {
-          //otherwise, serve list of featured and general object groups
+          //otherwise, serve search bar and results (if applicable)
           $view = new edan_search_view($call->get());
         }
 

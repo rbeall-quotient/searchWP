@@ -1,10 +1,10 @@
-ul.ogmt-navbar
+ul.edan-search-navbar
 {
   list-style: none;
   text-align: left;
 }
 
-li.ogmt-navbar
+li.edan-search-navbar
 {
   display: inline-block;
   padding: 5px;

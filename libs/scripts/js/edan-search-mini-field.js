@@ -28,7 +28,7 @@ function toggle_non_minis(classname)
   }
 
   //get fields elements
-  var elements = li.getElementsByClassName('ogmt-object-fields');
+  var elements = li.getElementsByClassName('edan-search-object-fields');
 
   //iterate through elements and display if hidden. Hide if currently displayed.
   for(var i = 0; i < elements.length; i++)
@@ -50,13 +50,13 @@ function toggle_non_minis(classname)
 function toggle_all()
 {
   //get expandall link element
-  var expandall  = document.getElementById('ogmt-expandall');
+  var expandall  = document.getElementById('edan-search-expandall');
   //get all object containers
-  var containers = document.getElementsByClassName('ogmt-object-container');
+  var containers = document.getElementsByClassName('edan-search-object-container');
   //get all expander links
   var expanders   = document.getElementsByClassName('expander');
   //get all minimizable fields
-  var fields     = document.getElementsByClassName('ogmt-object-fields');
+  var fields     = document.getElementsByClassName('edan-search-object-fields');
 
   //test whether or not to expand or collapse
   var doExpand = (expandall.textContent == 'Expand All');

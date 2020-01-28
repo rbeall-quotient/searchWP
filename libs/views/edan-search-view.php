@@ -109,14 +109,14 @@
 
       if($expandall)
       {
-        array_push($navbar, '<a href="#/" onclick="toggle_all()" id="ogmt-expandall">Expand All</a>');
+        array_push($navbar, '<a href="#/" onclick="toggle_all()" id="edan-search-expandall">Expand All</a>');
       }
 
-      $content = '<ul class="ogmt-navbar">';
+      $content = '<ul class="edan-search-navbar">';
 
       foreach($navbar as $item)
       {
-        $content .= '<li class="ogmt-navbar">';
+        $content .= '<li class="edan-search-navbar">';
         $content .= $item;
         $content .= '</li>';
       }
@@ -188,11 +188,11 @@
 
       if($info["total"] > 1)
       {
-        $content .= '<ul class="ogmt-navbar">';
+        $content .= '<ul class="edan-search-navbar">';
 
         foreach($navbar as $item)
         {
-          $content .= '<li class="ogmt-navbar">';
+          $content .= '<li class="edan-search-navbar">';
           $content .= $item;
           $content .= '</li>';
         }
@@ -317,65 +317,9 @@
         {
           $content .= $this->get_object($row->{'content'}, $row->{'url'}, $index++) . '<br/>';
         }
-        else
-        {
-          $content .= $this->get_object_group($row);
-        }
       }
 
       $content .= '</ul>';
-
-      return $content;
-    }
-
-    /**
-     * get html for rendering an object group
-     *
-     * @param  object $group object group json
-     * @return string        html string for rendering object group link
-     */
-    function get_object_group($group)
-    {
-      $content  = '<li><span style="display:inline-block;">';
-      $content .= '<div class="obj-header">';
-
-      $group_content = '';
-
-      if(property_exists($group, 'feature'))
-      {
-        if(property_exists($group->{'feature'}, 'media'))
-        {
-          $group_content .= $group->{'feature'}->{'media'};
-        }
-        else
-        {
-          $group_content .= '<img src="' . $group->{'feature'}->{'url'} . '"/>';
-        }
-      }
-
-      //if ogmt plugin installed, render as a link
-      if(class_exists( 'ogmt_url_handler' ))
-      {
-        $groupUrl = str_replace('objectgroup:', '', $group->{'url'});
-        $url = $this->url_handler->group_url($groupUrl);
-        $content .= '<a href="' . $url . '">' . $group_content . '</a>';
-
-        $content .= '<div><div><a href="' . $url . '">';
-        $content .= '<h4>' . $group->{'title'} . '</h4></a></div></div>';
-      }
-      else
-      {
-        $content .= $group_content;
-        $content .= '<div><div>';
-        $content .= '<h4>' . $group->{'title'} . '</h4></div></div>';
-      }
-
-      if(property_exists($group, 'description'))
-      {
-          $content .= '<div>' . $group->{'description'} . '</div>';
-      }
-
-      $content .= '</div></span></li><hr/>';
 
       return $content;
     }
@@ -390,7 +334,7 @@
     {
       $classname = $index;
 
-      $content  = '<li id="' . $classname . '-container' . '" class="ogmt-object-container">';
+      $content  = '<li id="' . $classname . '-container' . '" class="edan-search-object-container">';
       $content .= '<div class="obj-header">';
 
       if($this->options->is_minimized())
@@ -453,7 +397,7 @@
           }
           elseif($this->options->get_mini($field))
           {
-            $fieldclass = "ogmt-object-fields";
+            $fieldclass = "edan-search-object-fields";
             $display = 'none';
           }
           else

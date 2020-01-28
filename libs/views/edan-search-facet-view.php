@@ -8,7 +8,7 @@
      * Initialize handlers and validate facets.
      * Gather number of objects retrieved from passed json.
      *
-     * @param array $cache set of edan search or ogmt json objects
+     * @param array $cache set of edan search or edan search json objects
      */
     function __construct($cache)
     {
