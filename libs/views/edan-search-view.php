@@ -364,9 +364,10 @@
 
       }
 
-      $content .= '<hr/></div>';
+      $content .= '</div>';
 
       $content .= $this->get_fields($classname, $object);
+      //$content .= $this->get_online_media($object);
 
       $content .= '</li>';
 
@@ -406,15 +407,17 @@
             $display = 'block';
           }
 
+          $fieldclass .= " edan-search-field.$field";
+
           $content .= "<div id=\"$field\" class=\"" . $fieldclass . "\" style=\"display:$display\">";
 
           foreach($vals as $label => $lns)
           {
-            $content .= '<div><strong>'. $this->options->replace_label($label) . '</strong></div>';
+            $content .= '<div class="edan-search-label.' . str_replace(" ", "_", $label) . '">'. $this->options->replace_label($label) . '</div>';
 
             foreach($lns as $txt)
             {
-              $content .= '<div>' . $txt . '</div>';
+              $content .= '<div class="edan-search-field-content.' . str_replace(" ", "_", $label) . '">' . $txt . '</div>';
             }
           }
 
@@ -424,6 +427,115 @@
 
       $content .= '</li>';
 
+      return $content;
+    }
+
+    function get_online_media($object)
+    {
+      echo "get online media!";
+      $content = '<div class="edan-search-list-media">';
+      if(property_exists($object, 'descriptiveNonRepeating'))
+      {
+        if(property_exists($object->{'descriptiveNonRepeating'}, 'online_media'))
+        {
+          $onlineMedia = $object->{'descriptiveNonRepeating'}->{'online_media'};
+          $mediaCount = $onlineMedia->{'mediaCount'};
+          $media = $onlineMedia->{'media'};
+          $index = 0;
+
+          foreach($media as $m)
+          {
+            if(property_exists($onlineMedia, 'type'))
+            {
+              $type = $onlineMedia->{'type'};
+            }
+
+            if(property_exists($onlineMedia, 'content'))
+            {
+              $src  = $onlineMedia->{'content'};
+            }
+
+            if(property_exists($onlineMedia, 'caption'))
+            {
+              $type = $onlineMedia->{'caption'};
+            }
+
+            if(property_exists($onlineMedia, 'thumbnail'))
+            {
+              $src  = $onlineMedia->{'thumbnail'};
+            }
+
+            if(!$this->options->is_minimized())
+            {
+              $css = $type;
+              $display = 'block';
+            }
+            elseif($this->options->get_mini($field))
+            {
+              $css = "edan-search-object-fields";
+              $display = 'none';
+            }
+            else
+            {
+              $fieldclass = 'mini';
+              $display = 'block';
+            }
+
+            $css .= " edan-search-media-anchor ";
+            if($type)
+            {
+              $css .= "edan-search-media-anchor.$type";
+            }
+
+            if($caption)
+            {
+              $alt = $caption;
+            }
+            else
+            {
+              if(property_exists($object, 'title'))
+              {
+                $title = $object->{'title'};
+              }
+              elseif(property_exists($object, 'descriptiveNonRepeating') && property_exists($object->{'descriptiveNonRepeating'}, 'title'))
+              {
+                $title = $object->{'descriptiveNonRepeating'}->{'title'};
+              }
+
+              $alt .= "media object $index of $mediaCount for record $title";
+            }
+
+            $content .= "<a class=\"$css\" href=\"$content\" alt=\"$alt\">"
+            if($type == "Images")
+            {
+              if($thumbnail)
+              {
+                $content .= "<img src=\"$thumbnail\"/>";
+              }
+              else
+              {
+                $content .= "<img src=\"$content\"/>";
+              }
+            }
+            else
+            {
+              if($caption)
+              {
+                $content .= $caption;
+              }
+              else
+              {
+                $content .= "Media Object $index for $title";
+              }
+            }
+            $content .= "</a>"
+          }
+          //$src = $object->{'descriptiveNonRepeating'}->{'online_media'}->{'media'}[0]->{'thumbnail'};
+          //$content .= "<img src=\"$src\" />";
+        }
+
+        $content .= '</div>';
+      }
       return $content;
     }
 
