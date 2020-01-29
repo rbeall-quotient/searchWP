@@ -367,7 +367,6 @@
       $content .= '</div>';
 
       $content .= $this->get_fields($classname, $object);
-      //$content .= $this->get_online_media($object);
 
       $content .= '</li>';
 
@@ -420,9 +419,10 @@
               $content .= '<div class="edan-search-field-content.' . str_replace(" ", "_", $label) . '">' . $txt . '</div>';
             }
           }
-
           $content .= "</div>";
         }
+
+        $content .= $this->get_online_media($object);
       }
 
       $content .= '</li>';
@@ -430,55 +430,65 @@
       return $content;
     }
 
+    function get_online_media_deprecated($object)
+    {
+      return "get online media!";
+    }
+
     function get_online_media($object)
     {
-      echo "get online media!";
-      $content = '<div class="edan-search-list-media">';
+      // echo "get online media!";
+      $content = "<div class=\"edan-search-list-media\">";
       if(property_exists($object, 'descriptiveNonRepeating'))
       {
         if(property_exists($object->{'descriptiveNonRepeating'}, 'online_media'))
         {
           $onlineMedia = $object->{'descriptiveNonRepeating'}->{'online_media'};
           $mediaCount = $onlineMedia->{'mediaCount'};
+          //$content .= "<div>$mediaCount</div>";
           $media = $onlineMedia->{'media'};
-          $index = 0;
+          $index = 1;
 
           foreach($media as $m)
           {
-            if(property_exists($onlineMedia, 'type'))
+            if($index == 1)
             {
-              $type = $onlineMedia->{'type'};
+              $index++;
+              continue;
+            }
+            if(property_exists($m, 'type'))
+            {
+              $type = $m->{'type'};
+              //$content .= "<div>$type</div>";
             }
 
-            if(property_exists($onlineMedia, 'content'))
+            if(property_exists($m, 'content'))
             {
-              $src  = $onlineMedia->{'content'};
+              $src  = $m->{'content'};
+              //$content .= "<div>$src</div>";
             }
 
-            if(property_exists($onlineMedia, 'caption'))
+            if(property_exists($m, 'caption'))
             {
-              $type = $onlineMedia->{'caption'};
+              $caption = $m->{'caption'};
+              //$content .= "<div>$caption</div>";
             }
 
-            if(property_exists($onlineMedia, 'thumbnail'))
+            if(property_exists($m, 'thumbnail'))
             {
-              $src  = $onlineMedia->{'thumbnail'};
+              $thumbnail  = $m->{'thumbnail'};
+              //$content .= "<div>$thumbnail</div>";
             }
+
+            $css = " edan-search-object-fields ";
 
             if(!$this->options->is_minimized())
             {
-              $css = $type;
-              $display = 'block';
-            }
-            elseif($this->options->get_mini($field))
-            {
-              $css = "edan-search-object-fields";
-              $display = 'none';
+              $display = 'display:block';
             }
             else
             {
-              $fieldclass = 'mini';
-              $display = 'block';
+              $display = 'display:none';
             }
 
             $css .= " edan-search-media-anchor ";
@@ -486,6 +496,8 @@
             {
               $css .= "edan-search-media-anchor.$type";
             }
+
+            $alt = "";
 
             if($caption)
             {
@@ -495,26 +507,40 @@
             {
               if(property_exists($object, 'title'))
               {
-                $title = $object->{'title'};
+                if(property_exists($object->{'title'}, 'content'))
+                {
+                  $title = $object = $object->{'title'}->{'content'};
+                }
+                else
+                {
+                  $title = $object->{'title'};
+                }
               }
               elseif(property_exists($object, 'descriptiveNonRepeating') && property_exists($object->{'descriptiveNonRepeating'}, 'title'))
               {
-                $title = $object->{'descriptiveNonRepeating'}->{'title'};
+                if(property_exists($object->{'descriptiveNonRepeating'}->{'title'}, 'content'))
+                {
+                  $title = $object->{'descriptiveNonRepeating'}->{'title'}->{'content'};
+                }
+                else
+                {
+                    $title = $object->{'descriptiveNonRepeating'}->{'title'};
+                }
               }
 
               $alt .= "media object $index of $mediaCount for record $title";
             }
 
-            $content .= "<a class=\"$css\" href=\"$content\" alt=\"$alt\">"
+            $content .= "<a class=\"$css\" href=\"$src\" alt=\"$alt\" style=\"$display\">";
             if($type == "Images")
             {
               if($thumbnail)
               {
-                $content .= "<img src=\"$thumbnail\"/>";
+                $content .= "<img src=\"$thumbnail\" />";
               }
               else
               {
-                $content .= "<img src=\"$content\"/>";
+                $content .= "<img src=\"$content\" />";
               }
             }
             else
@@ -528,16 +554,16 @@
                 $content .= "Media Object $index for $title";
               }
             }
-            $content .= "</a>"
+            $content .= "</a>";
+            $index++;
           }
           //$src = $object->{'descriptiveNonRepeating'}->{'online_media'}->{'media'}[0]->{'thumbnail'};
           //$content .= "<img src=\"$src\" />";
         }
-
-        $content .= '</div>';
       }
+
+      $content .= '</div>';
       return $content;
     }
-
-  }
+}
 ?>

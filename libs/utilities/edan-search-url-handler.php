@@ -37,6 +37,7 @@
 
         if($val)
         {
+          $val = urlencode($val);
           $query .= "$key=$val";
         }
 
