@@ -33,10 +33,26 @@
 
         if(property_exists($this->object->{'content'}->{'descriptiveNonRepeating'}, 'online_media'))
         {
-          console_log("JSON object: " . json_encode($this->object));
+          $media =  $this->get_media_content($this->{'object'}->{'content'}->{'descriptiveNonRepeating'});
+          $content .= $media['content'];
+          $nonImageMedia .= $media['nonImages'];
+
+          $content .= '<div id="edan-search-object-media-section">';
           $src = $this->object->{'content'}->{'descriptiveNonRepeating'}->{'online_media'}->{'media'}[0]->{'content'};
+
+          if(strpos($src, "ids.si.edu") !== false)
+          {
+            $src = str_replace("deliveryService", "dynamic", $src);
+            $content .= "<iframe id = \"edan-search-object-idsframe\" src=\"$src" . "&container.fullpage&inline=true\" width=\"1500\" height=\"750\"></iframe>";
+          }
+          else
+          {
+            $content .= "<img src=\"$src\" />";
+          }
+
+          $content .= '</div>';
           //$content .= "<img src=\"$src\" />";
-          $content .= "<br/><div style=\"border-style:solid;border-color:black\"><iframe src=\"$src" . "&container.fullpage&inline=true\" width=\"1500\" height=\"750\"></iframe>";
+          //$content .= "<br/><div style=\"border-style:solid;border-color:black\"><iframe id = \"edan-search-object-idsframe\" src=\"$src" . "&container.fullpage&inline=true\" width=\"1500\" height=\"750\"></iframe>";
           $content .= "<a href=\"$src\" target=\"_blank\">View Full Sized Image</a></div>";
         }
 
@@ -45,6 +61,72 @@
       }
 
       return $content;
+    }
+
+    function get_media_content($object)
+    {
+      $res = [
+        "content" => "<div>",
+        "nonImages" => []
+      ];
+
+      if(property_exists($object, 'online_media'))
+      {
+        $onlineMedia = $object->{'online_media'};
+        $mediaCount = $onlineMedia->{'mediaCount'};
+
+        $media = $onlineMedia->{'media'};
+        $index = 0;
+        $imageExists = false;
+
+        foreach($media as $m)
+        {
+          if(property_exists($m, 'type') && $m->{'type'} == "Images")
+          {
+            $index++;
+            $imageExists = true;
+            if($index == 1)
+            {
+              $disp = "display:block";
+            }
+            else
+            {
+              $disp = "display:none";
+            }
+
+            $res["content"] .= "<div id=\"displayMedia$index\" style=\"$disp\">";
+
+            if(strpos($m->{'content'}, 'ids.si.edu') != false)
+            {
+              $src = str_replace('deliveryService', 'dynamic', $m->{'content'});
+              $res['content'] .= "<iframe src=\"$src\" width=\"1500\" height=\"750\"></iframe>";
+            }
+            else
+            {
+              $res['content'] .= "<img src=\"" . $m->{'content'} . "\" />";
+            }
+
+            $res["content"] .= "</div>";
+          }
+          else
+          {
+            array_push($res["nonImages"], $m);
+          }
+        }
+
+        if($imageExists)
+        {
+          $res['content'] .= "<input type=\"hidden\" id=\"visualMediaCount\" value=\"$index\"></input>";
+          $res['content'] .= "<input type=\"hidden\" id=\"visualMediaIndex\" value=\"1\"></input>";
+          if($index > 1)
+          {
+            $res['content'] .= "<div><a id=\"mediaPrev\" href=\"#\" onclick=\"mediaPrevious()\" style=\"display:none\">previous</a><span><span id=\"mediaIndex\">1</span>/$mediaCount</span><a id=\"mediaNext\" href=\"#\" onclick=\"mediaNext()\">Next</a>";
+          }
+        }
+      }
+
+      $res["content"] .= "</div>";
+      return $res;
     }
 
     /**
@@ -60,15 +142,15 @@
       {
         $labels = $this->compile_field_values($this->object->{'content'}->{'freetext'});
 
-        $content .= "<div>";
+        $content .= "<div class=\"edan-search-object-view-fields\">";
 
         foreach($labels as $key => $vals)
         {
-            $content .= '<div><strong>'. $this->options->replace_label($key) . '</strong></div>';
+            $content .= '<div class="edan-search-object-view-field-label edan-search-object-view-field-label.' . $key .'">'. $this->options->replace_label($key) . '</div>';
 
             foreach($vals as $txt)
             {
-              $content .= '<div>' . $txt . '</div>';
+              $content .= '<div class="edan-search-object-view-field-content edan-search-object-view-field-label.' . $key . '">' . $txt . '</div>';
             }
 
             $content .= '<br/>';

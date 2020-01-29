@@ -23,6 +23,7 @@
     wp_enqueue_script('edan-search-mini-field.js', plugin_dir_url(__FILE__) . 'js/edan-search-mini-field.js');//mini field javascript
     wp_enqueue_script('edan-search-facets-list.js', plugin_dir_url(__FILE__) . 'js/edan-search-facets-list.js');//facet list javascript
     wp_enqueue_script('edan-search.js', plugin_dir_url(__FILE__) . 'js/edan-search.js');
+    wp_enqueue_script('ids-link-manager.js', plugin_dir_url(__FILE__) . 'js/ids-link-manager.js');
 
     /*styles*/
     wp_enqueue_style('edan-search-object-display.css', plugin_dir_url(__FILE__) . 'css/edan-search-object-display.css');//css for object display
