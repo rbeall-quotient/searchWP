@@ -24,42 +24,92 @@
      */
     function get_content()
     {
+      //return "<div>hello world</div>";
       $content = '';
+      $content .= $this->search->get_search_bar();
 
-      if($this->object && property_exists($this->object->{'content'}, 'descriptiveNonRepeating'))
+      try
       {
-        $content .= $this->search->get_search_bar();
+        if(!$this->{'object'})
+        {
+          return $content;
+        }
+        elseif(property_exists($this->object, 'Collection_Title'))
+        {
+          return $this->get_collection_object();
+        }
+
         $content .= '<div class="obj-header">';
 
-        if(property_exists($this->object->{'content'}->{'descriptiveNonRepeating'}, 'online_media'))
-        {
-          $media =  $this->get_media_content($this->{'object'}->{'content'}->{'descriptiveNonRepeating'});
-          $content .= $media['content'];
-          $nonImageMedia .= $media['nonImages'];
+        $media =  $this->get_media_content($this->object);
+        $content .= $media['content'];
+        $content .= "<h1 class=\"edan-search-object-title\">" . $this->get_title() . "</h1>";
+        $nonImageMedia = $media['nonImages'];
 
-          $content .= '<div id="edan-search-object-media-section">';
-          $src = $this->object->{'content'}->{'descriptiveNonRepeating'}->{'online_media'}->{'media'}[0]->{'content'};
-
-          if(strpos($src, "ids.si.edu") !== false)
-          {
-            $src = str_replace("deliveryService", "dynamic", $src);
-            $content .= "<iframe id = \"edan-search-object-idsframe\" src=\"$src" . "&container.fullpage&inline=true\" width=\"1500\" height=\"750\"></iframe>";
-          }
-          else
-          {
-            $content .= "<img src=\"$src\" />";
-          }
-
-          $content .= '</div>';
-          //$content .= "<img src=\"$src\" />";
-          //$content .= "<br/><div style=\"border-style:solid;border-color:black\"><iframe id = \"edan-search-object-idsframe\" src=\"$src" . "&container.fullpage&inline=true\" width=\"1500\" height=\"750\"></iframe>";
-          $content .= "<a href=\"$src\" target=\"_blank\">View Full Sized Image</a></div>";
-        }
+        $content .= '<div id="edan-search-object-media-section">';
+        $content .= '</div>';
 
         $content .= '<hr/></div>';
         $content .= $this->get_fields();
+        if($nonImageMedia && count($nonImageMedia) > 0)
+        {
+          $content .= $this->other_media($nonImageMedia);
+        }
+      }
+      catch(Exception $e)
+      {
+          $content .= "\n" . $e->getMessage();
       }
 
+      return $content;
+    }
+
+    function get_title()
+    {
+      $title = "";
+
+      if(property_exists($this->object, 'title'))
+      {
+        return $this->object->title;
+      }
+      elseif(property_exists($this->object, 'content') && property_exists($this->object->content, 'descriptiveNonRepeating') && property_exists($this->object->content->descriptiveNonRepeating, 'title'))
+      {
+        return $this->object->content->descriptiveNonRepeating->title;
+      }
+
+      return $title;
+    }
+
+    function other_media($media)
+    {
+      if(!$media || count($media) == 0)
+      {
+        console_log("Empty media");
+        return "";
+      }
+
+      $content = "<div class=\"edan-search-non-image-media-block\">";
+      $index = 0;
+      foreach($media as $m)
+      {
+        $index++;
+        if(property_exists($m, 'content'))
+        {
+          $src = $m->{'content'};
+
+          if(property_exists($m, "caption"))
+          {
+            $caption = $m->{'caption'};
+          }
+          else
+          {
+            $caption = "Non-Image Media $index";
+          }
+
+          $content .= "<div class=\"edan-search-non-image-media\"><a href=\"$src\" alt=\"$caption\">$caption</a></div>";
+        }
+      }
+      $content .= "</div>";
       return $content;
     }
 
@@ -70,58 +120,62 @@
         "nonImages" => []
       ];
 
-      if(property_exists($object, 'online_media'))
+      $onlineMedia = $this->get_media_section($object);
+
+      if(!$onlineMedia)
       {
-        $onlineMedia = $object->{'online_media'};
-        $mediaCount = $onlineMedia->{'mediaCount'};
+        console_log("Online Media was null!");
+        return $res;
+      }
 
-        $media = $onlineMedia->{'media'};
-        $index = 0;
-        $imageExists = false;
+      $mediaCount = $onlineMedia->{'mediaCount'};
 
-        foreach($media as $m)
+      $media = $onlineMedia->{'media'};
+      $index = 0;
+      $imageExists = false;
+
+      foreach($media as $m)
+      {
+        if(property_exists($m, 'type') && $m->{'type'} == "Images")
         {
-          if(property_exists($m, 'type') && $m->{'type'} == "Images")
+          $index++;
+          $imageExists = true;
+          if($index == 1)
           {
-            $index++;
-            $imageExists = true;
-            if($index == 1)
-            {
-              $disp = "display:block";
-            }
-            else
-            {
-              $disp = "display:none";
-            }
-
-            $res["content"] .= "<div id=\"displayMedia$index\" style=\"$disp\">";
-
-            if(strpos($m->{'content'}, 'ids.si.edu') != false)
-            {
-              $src = str_replace('deliveryService', 'dynamic', $m->{'content'});
-              $res['content'] .= "<iframe src=\"$src\" width=\"1500\" height=\"750\"></iframe>";
-            }
-            else
-            {
-              $res['content'] .= "<img src=\"" . $m->{'content'} . "\" />";
-            }
-
-            $res["content"] .= "</div>";
+            $disp = "display:block";
           }
           else
           {
-            array_push($res["nonImages"], $m);
+            $disp = "display:none";
           }
-        }
 
-        if($imageExists)
-        {
-          $res['content'] .= "<input type=\"hidden\" id=\"visualMediaCount\" value=\"$index\"></input>";
-          $res['content'] .= "<input type=\"hidden\" id=\"visualMediaIndex\" value=\"1\"></input>";
-          if($index > 1)
+          $res["content"] .= "<div id=\"displayMedia$index\" style=\"$disp\">";
+
+          if(strpos($m->{'content'}, 'ids.si.edu') != false)
           {
-            $res['content'] .= "<div><a id=\"mediaPrev\" href=\"#\" onclick=\"mediaPrevious()\" style=\"display:none\">previous</a><span><span id=\"mediaIndex\">1</span>/$mediaCount</span><a id=\"mediaNext\" href=\"#\" onclick=\"mediaNext()\">Next</a>";
+            $src = str_replace('deliveryService', 'dynamic', $m->{'content'});
+            $res['content'] .= "<iframe src=\"$src\" width=\"1500\" height=\"750\"></iframe>";
           }
+          else
+          {
+            $res['content'] .= "<img src=\"" . $m->{'content'} . "\" />";
+          }
+
+          $res["content"] .= "</div>";
+        }
+        else
+        {
+          array_push($res["nonImages"], $m);
+        }
+      }
+
+      if($imageExists)
+      {
+        $res['content'] .= "<input type=\"hidden\" id=\"visualMediaCount\" value=\"$index\"></input>";
+        $res['content'] .= "<input type=\"hidden\" id=\"visualMediaIndex\" value=\"1\"></input>";
+        if($index > 1)
+        {
+          $res['content'] .= "<div><span><a id=\"mediaPrev\" href=\"#\" onclick=\"mediaPrevious()\" style=\"display:none\">previous</a><span><span id=\"mediaIndex\">1</span>/$mediaCount</span><a id=\"mediaNext\" href=\"#\" onclick=\"mediaNext()\">Next</a></span></div>";
         }
       }
 
@@ -146,6 +200,7 @@
 
         foreach($labels as $key => $vals)
         {
+            console_log("object field values: " . json_encode($vals));
             $content .= '<div class="edan-search-object-view-field-label edan-search-object-view-field-label.' . $key .'">'. $this->options->replace_label($key) . '</div>';
 
             foreach($vals as $txt)
@@ -189,6 +244,36 @@
       }
 
       return $display;
+    }
+
+    function get_collection_object()
+    {
+      return "";
+    }
+
+    function get_media_section($object)
+    {
+      if(property_exists($object, 'descriptiveNonRepeating') && property_exists($object->{'descriptiveNonRepeating'}, 'online_media'))
+      {
+        return $object->{'descriptiveNonRepeating'}->{'online_media'};
+      }
+      elseif(property_exists($object, 'content') && property_exists($object->{'content'}, 'descriptiveNonRepeating') && property_exists($object->{'content'}->{'descriptiveNonRepeating'}, 'online_media'))
+      {
+        return $object->{'content'}->{'descriptiveNonRepeating'}->{'online_media'};
+      }
+      elseif(property_exists($object, 'online_media'))
+      {
+        return $object->{'online_media'};
+      }
+      elseif(property_exists($object, 'content') && property_exists($object->{'content'}, 'online_media'))
+      {
+        return $object->{'content'}->{'online_media'};
+      }
+      else
+      {
+        console_log("null");
+        return null;
+      }
     }
   }
 ?>

@@ -153,8 +153,6 @@
       $options = new esw_options_handler();
 
       $url = $this->get_url();
-      $url = str_replace(edan_search_name_from_url(), $options->get_path(), $url);
-
       $vars = array(
         'edanUrl' => $edanUrl,
       );

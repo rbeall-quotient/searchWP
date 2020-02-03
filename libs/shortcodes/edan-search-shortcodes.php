@@ -8,6 +8,9 @@
   //shortcode for object display
   add_shortcode('edan-object', 'edan_search_object_shortcode');
 
+  //shortcode for enhanced edan search
+  add_shortcode('edan-search-enhanced', 'edan_search_enhanced');
+
   /**
    * gather user passed type facet and return shortcode data for appropriate
    * edan search view.
@@ -22,9 +25,20 @@
     ), $atts));
 
     $call = new edan_search_call();
-    //$view = new edan_search_view($call->get(process_type_fqs($type)));
-    $view = new edan_search_view($call->get());
+    $view = new edan_search_view($call->get(process_type_fqs($type)));
+    //$view = new edan_search_view($call->get());
 
+    return $view->get_content();
+  }
+
+  function edan_search_enhanced($atts)
+  {
+    extract(shortcode_atts(array('type' => 'edanmdm'), $atts));
+    if(array_key_exists('fq', $atts))
+    {
+      $fqs = explode(",", $atts['fq']);
+    }
+    $view = new edan_search_view_manager();
     return $view->get_content();
   }
 

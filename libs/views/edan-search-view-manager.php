@@ -11,7 +11,7 @@
      *
      * @return string edan search content
      */
-    function get_content()
+    function get_content($fqs = NULL)
     {
       //check if jsonDump set
       if(get_query_var('jsonDump'))

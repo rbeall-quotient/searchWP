@@ -86,5 +86,6 @@ function mediaPrevious()
     document.getElementById("mediaNext").style.display = "none";
   }
 
-  document.getElementById("visualMediaIndex").value = index; 
+  document.getElementById("visualMediaIndex").value = index;
+  document.getElementById("mediaIndex").innerHTML = index;
 }

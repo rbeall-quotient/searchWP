@@ -63,10 +63,11 @@
 
       $edan_fqs = get_query_var('edan_fq');
 
+      $fqs = array();
+      array_push($fqs, "type:\"edanmdm\"");
+
       if($edan_fqs && $issearch)
       {
-        $fqs = array();
-
         foreach($edan_fqs as $fq)
         {
           $fq = explode(':', $fq, 2);

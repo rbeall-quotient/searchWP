@@ -8,7 +8,7 @@ function edan_search_redirect(term)
 {
   var search = document.getElementById('edan-search-bar').value;
   search = search.trim();
-  search = search.replace(' ', '+');
+  search = search.replace(/\s/g, '+');
   console.log(window.location.href);
   console.log(search);
 
@@ -16,10 +16,13 @@ function edan_search_redirect(term)
   let params = new URLSearchParams(url.search.slice(1));
 
   params = new URLSearchParams();
+  //params.set('edan_q', search.replace(" ", "%2B"));
   params.set('edan_q', search);
+  //params.set('edan_fq[]', 'type:edanmdm');
 
-  console.log("URL: " + url.toString().split('?')[0]);
-  console.log("PARAMS: " + params.toString());
+  //console.log("URL: " + url.toString().split('?')[0]);
+  //console.log("PARAMS: " + params.toString());
+  console.log(encodeURI(url.toString().split('?')[0] + '?' + params.toString()))
 
   window.location.replace(url.toString().split('?')[0] + '?' + params.toString());
 

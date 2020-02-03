@@ -11,7 +11,7 @@
      * return array of edan json objects
      * @return array set of edan json
      */
-    function get()
+    function get($fq = NULL)
     {
       if(get_query_var('edanUrl'))
       {

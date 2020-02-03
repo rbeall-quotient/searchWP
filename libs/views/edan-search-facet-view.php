@@ -41,12 +41,31 @@
 
         if($edan_fqs)
         {
-          $content .= '<h4>' . $this->options->get_remove_message() . '</h4>';
+          $showRemove = False;
+
+          foreach($edan_fqs as $fq)
+          {
+            console_log("FQ: $fq");
+            if($fq != "type:edanmdm")
+            {
+              console_log("Show remove is not edanmdm");
+              $showRemove = True;
+            }
+          }
+
+          if($showRemove)
+          {
+            $content .= '<h4>' . $this->options->get_remove_message() . '</h4>';
+          }
+
           $content .= '<ul style="list-style:none;">';
 
           foreach($edan_fqs as $fq)
           {
-            $content .= '<li><a href="' . $this->url_handler->remove_facet_url($fq) . '">[X]' . $fq . '</a></li>';
+            if($fq != "type:edanmdm")
+            {
+              $content .= '<li><a href="' . $this->url_handler->remove_facet_url($fq) . '">[X]' . $fq . '</a></li>';
+            }
           }
 
           $content .= '</ul>';
@@ -57,7 +76,7 @@
 
         foreach($this->facets as $key => $val)
         {
-          if(count($val) != 0 && $this->options->ignore_facet($key))
+          if(count($val) != 0 && $this->options->ignore_facet($key) && $key != "type")
           {
             $content .= '<li>';
             $content .= '<a href="#/" onclick="toggle_facet_view(' . "'$key'" . ')" id = "' . $key . '-link">&#9658;' . $this->options->replace_facet($key) . '</a>';

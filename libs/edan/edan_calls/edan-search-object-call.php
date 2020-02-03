@@ -17,8 +17,6 @@
      */
     function get()
     {
-      $results = array();
-
       //if edan search data is already cached, return cached value
       if(wp_cache_get('edan_search_cache'))
       {
@@ -45,7 +43,6 @@
       $results['search'] = false;
 
       wp_cache_set('edan_search_cache', $results);
-
       return $results;
     }
   }
