@@ -84,14 +84,15 @@
     {
       if(!$media || count($media) == 0)
       {
-        console_log("Empty media");
         return "";
       }
 
       $content = "<div class=\"edan-search-non-image-media-block\">";
+      $content .= "<h3 class=\"edan-search-non-image-media-section-header\">Other Media For " . $this->get_title() . "</h3>";
       $index = 0;
       foreach($media as $m)
       {
+        //echo json_encode($m);
         $index++;
         if(property_exists($m, 'content'))
         {
@@ -103,10 +104,18 @@
           }
           else
           {
-            $caption = "Non-Image Media $index";
+            $caption = $this->get_title() . " media - $index";
           }
 
-          $content .= "<div class=\"edan-search-non-image-media\"><a href=\"$src\" alt=\"$caption\">$caption</a></div>";
+          $content .= "<div class=\"edan-search-non-image-media\"><a href=\"$src\" alt=\"$caption\">";
+
+          if(property_exists($m, 'thumbnail'))
+          {
+            $thumbnail = $m->{'thumbnail'};
+            $content .= "<img src=\"$thumbnail\" class=\"edan-search-non-image-media-thumbnail\" />";
+          }
+
+          $content .= "$caption</a></div>";
         }
       }
       $content .= "</div>";
@@ -124,7 +133,6 @@
 
       if(!$onlineMedia)
       {
-        console_log("Online Media was null!");
         return $res;
       }
 
