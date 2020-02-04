@@ -334,7 +334,9 @@
     {
       $classname = $index;
 
-      $content  = '<li id="' . $classname . '-container' . '" class="edan-search-object-container">';
+      $metadata_usage_class = $this->get_metadata_usage_class($object);
+
+      $content  = '<li id="' . $classname . '-container' . '" class="edan-search-object-container ' . $metadata_usage_class . '">';
       $content .= '<div class="edan-search-obj-header">';
 
       if($this->options->is_minimized())
@@ -351,6 +353,7 @@
         {
           if(property_exists($m, 'type') && $m->{'type'} == "Images")
           {
+            $media_usage = $this->get_media_usage_class($m);
             if(property_exists($m, 'thumbnail'))
             {
               $src = $m->{'thumbnail'};
@@ -364,7 +367,7 @@
               $src = "";
             }
 
-            $content .= "<img src=\"$src\" />";
+            $content .= "<img src=\"$src\" class=\"$media_usage\"/>";
             break;
           }
         }
@@ -574,8 +577,8 @@
 
           $alt .= "media object $index of $mediaCount for record $title";
         }
-
-        $content .= "<a class=\"$css\" href=\"$src\" alt=\"$alt\" style=\"$display\">";
+        $media_usage = $this->get_media_usage_class($m);
+        $content .= "<a class=\"$css $media_usage\" href=\"$src\" alt=\"$alt\" style=\"$display\">";
         if($type == "Images")
         {
           if($thumbnail)
@@ -604,6 +607,35 @@
 
       $content .= '</div>';
       return $content;
+    }
+
+    function get_media_usage_class($m)
+    {
+      $media_usage_class = "";
+      if(property_exists($m, 'usage') && property_exists($m->{'usage'}, 'access'))
+      {
+        if($m->{'usage'}->{'access'} == "CC0")
+        {
+          $media_usage_class = "edan-search-list-object-media-usage-CC0";
+        }
+      }
+      return $media_usage_class;
+    }
+
+    function get_metadata_usage_class($object)
+    {
+      if(property_exists($object, 'descriptiveNonRepeating'))
+      {
+        $dnr = $object->{'descriptiveNonRepeating'};
+        if(property_exists($dnr, 'metadata_usage') && property_exists($dnr->{'metadata_usage'}, 'access'))
+        {
+          if($dnr->{'metadata_usage'}->{'access'} == "CC0")
+          {
+            return "edan-search-list-object-metadata-usage-CC0";
+          }
+        }
+      }
+      return "";
     }
 }
 ?>

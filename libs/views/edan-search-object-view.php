@@ -34,12 +34,9 @@
         {
           return $content;
         }
-        elseif(property_exists($this->object, 'Collection_Title'))
-        {
-          return $this->get_collection_object();
-        }
+        $metadata_usage = $this->get_metadata_usage_class();
 
-        $content .= '<div class="edan-search-obj-header">';
+        $content .= "<div class=\"edan-search-obj-header $metadata_usage\">";
 
         $media =  $this->get_media_content($this->object);
         $content .= $media['content'];
@@ -96,6 +93,15 @@
         $index++;
         if(property_exists($m, 'content'))
         {
+          $media_usage_class = "";
+          if(property_exists($m, 'usage') && property_exists($m->{'usage'}, 'access'))
+          {
+            if($m->{'usage'}->{'access'} == "CC0")
+            {
+              $media_usage_class = "edan-search-media-usage-CC0";
+            }
+          }
+
           $src = $m->{'content'};
 
           if(property_exists($m, "caption"))
@@ -107,7 +113,7 @@
             $caption = $this->get_title() . " media - $index";
           }
 
-          $content .= "<div class=\"edan-search-non-image-media\"><a href=\"$src\" alt=\"$caption\">";
+          $content .= "<div class=\"edan-search-non-image-media $media_usage_class\"><a href=\"$src\" alt=\"$caption\">";
 
           if(property_exists($m, 'thumbnail'))
           {
@@ -146,6 +152,14 @@
       {
         if(property_exists($m, 'type') && $m->{'type'} == "Images")
         {
+          $media_usage_class = "";
+          if(property_exists($m, 'usage') && property_exists($m->{'usage'}, 'access'))
+          {
+            if($m->{'usage'}->{'access'} == "CC0")
+            {
+              $media_usage_class = "edan-search-media-usage-CC0";
+            }
+          }
           $index++;
           $imageExists = true;
           if($index == 1)
@@ -157,7 +171,7 @@
             $disp = "display:none";
           }
 
-          $res["content"] .= "<div id=\"displayMedia$index\" style=\"$disp\">";
+          $res["content"] .= "<div id=\"displayMedia$index\" style=\"$disp\" class=\"edan-search-object-view-image-media $media_usage_class\">";
 
           if(strpos($m->{'content'}, 'ids.si.edu') != false)
           {
@@ -253,8 +267,19 @@
       return $display;
     }
 
-    function get_collection_object()
+    function get_metadata_usage_class()
     {
+      if(property_exists($this->object, 'content') && property_exists($this->object->{'content'}, 'descriptiveNonRepeating'))
+      {
+        $dnr = $this->object->{'content'}->{'descriptiveNonRepeating'};
+        if(property_exists($dnr, 'metadata_usage') && property_exists($dnr->{'metadata_usage'}, 'access'))
+        {
+          if($dnr->{'metadata_usage'}->{'access'} == "CC0")
+          {
+            return "edan-search-object-metadata-usage-CC0";
+          }
+        }
+      }
       return "";
     }
 

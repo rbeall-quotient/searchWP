@@ -80,7 +80,7 @@ function toggle_all()
     }
     else
     {
-      containers[i].classList.remove('object-highlight');
+      containers[i].classList.remove('edan-search-object-highlight');
     }
   }
 
