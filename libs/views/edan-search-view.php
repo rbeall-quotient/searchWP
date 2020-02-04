@@ -335,11 +335,11 @@
       $classname = $index;
 
       $content  = '<li id="' . $classname . '-container' . '" class="edan-search-object-container">';
-      $content .= '<div class="obj-header">';
+      $content .= '<div class="edan-search-obj-header">';
 
       if($this->options->is_minimized())
       {
-        $content .= "<a id=\"$classname-expander\" onclick=\"toggle_non_minis('" . $classname . "')\" href=\"#/\" class=\"expander\">Expand</a>";
+        $content .= "<a id=\"$classname-expander\" onclick=\"toggle_non_minis('" . $classname . "')\" href=\"#/\" class=\"edan-search-expander\">Expand</a>";
       }
 
       $media = $this->get_media_section($object);
@@ -456,17 +456,17 @@
             $display = 'block';
           }
 
-          $fieldclass .= " edan-search-field.$field";
+          $fieldclass .= " edan-search-field-$field";
 
           $content .= "<div id=\"$field\" class=\"" . $fieldclass . "\" style=\"display:$display\">";
 
           foreach($vals as $label => $lns)
           {
-            $content .= '<div class="edan-search-label.' . str_replace(" ", "_", $label) . '">'. $this->options->replace_label($label) . '</div>';
+            $content .= '<div class="edan-search-label-' . str_replace(" ", "-", $label) . '">'. $this->options->replace_label($label) . '</div>';
 
             foreach($lns as $txt)
             {
-              $content .= '<div class="edan-search-field-content.' . str_replace(" ", "_", $label) . '">' . $txt . '</div>';
+              $content .= '<div class="edan-search-field-content-' . str_replace(" ", "-", $label) . '">' . $txt . '</div>';
             }
           }
           $content .= "</div>";
@@ -538,7 +538,7 @@
 
         if($type)
         {
-          $css .= "edan-search-media-anchor.$type";
+          $css .= "edan-search-media-anchor-$type";
         }
 
         $alt = "";

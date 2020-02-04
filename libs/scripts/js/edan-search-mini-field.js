@@ -17,14 +17,14 @@ function toggle_non_minis(classname)
     expander.textContent = "Collapse";
 
     //highlight object if expanded
-    li.classList.add('object-highlight');
+    li.classList.add('edan-search-object-highlight');
   }
   else
   {
     expander.textContent = 'Expand';
 
     //remove highlight if collapsed
-    li.classList.remove('object-highlight');
+    li.classList.remove('edan-search-object-highlight');
   }
 
   //get fields elements
@@ -54,7 +54,7 @@ function toggle_all()
   //get all object containers
   var containers = document.getElementsByClassName('edan-search-object-container');
   //get all expander links
-  var expanders   = document.getElementsByClassName('expander');
+  var expanders   = document.getElementsByClassName('edan-search-expander');
   //get all minimizable fields
   var fields     = document.getElementsByClassName('edan-search-object-fields');
 
@@ -76,7 +76,7 @@ function toggle_all()
   {
     if(doExpand)
     {
-      containers[i].classList.add('object-highlight');
+      containers[i].classList.add('edan-search-object-highlight');
     }
     else
     {

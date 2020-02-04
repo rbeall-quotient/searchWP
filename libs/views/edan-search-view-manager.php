@@ -30,7 +30,7 @@
         else
         {
           //otherwise, serve search bar and results (if applicable)
-          $view = new edan_search_view($call->get());
+          $view = new edan_search_view($call->get($fqs));
         }
 
         //serve up gathered content

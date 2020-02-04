@@ -34,12 +34,15 @@
   function edan_search_enhanced($atts)
   {
     extract(shortcode_atts(array('type' => 'edanmdm'), $atts));
+
+    $fqs = NULL;
+
     if(array_key_exists('fq', $atts))
     {
       $fqs = explode(",", $atts['fq']);
     }
     $view = new edan_search_view_manager();
-    return $view->get_content();
+    return $view->get_content($fqs);
   }
 
   /**

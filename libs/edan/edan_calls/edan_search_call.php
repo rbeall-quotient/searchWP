@@ -69,8 +69,6 @@
         $vars['start'] = $start;
       }
 
-      console_log("edan-search call hit");
-
       $results['search'] = json_decode($this->edan->edan_call($vars, $this->service, 1));
 
       wp_cache_set('edan_search_cache', $results);

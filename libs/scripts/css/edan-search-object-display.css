@@ -1,19 +1,19 @@
 /*Header for Object Header (image, title, and expand button)*/
-.obj-header
+.edan-search-obj-header
 {
   width: 100%;
   padding-top: 10px;
 }
 
 /*Styles for expander button*/
-.expander
+.edan-search-expander
 {
   float: right;
   margin-right: 3%
 }
 
 /*Highlight class for expanded object*/
-.object-highlight
+.edan-search-object-highlight
 {
   background-color: #eff3f4;
 }

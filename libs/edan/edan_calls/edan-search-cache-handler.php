@@ -21,7 +21,7 @@
       else
       {
         $search_call = new edan_search_call();
-        return $search_call->get();
+        return $search_call->get($fq);
       }
     }
   }

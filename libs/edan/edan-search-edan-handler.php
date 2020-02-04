@@ -55,16 +55,31 @@
           $uri_string .= "&";
         }
 
-        $uri_string .= "$key=$var";
+        if($key != "fqs")
+        {
+          $uri_string .= "$key=$var";
 
-        $_GET[$key] = $var;
-        $COUNT++;
+          $_GET[$key] = $var;
+          $COUNT++;
+        }
       }
 
       $edan_fqs = get_query_var('edan_fq');
 
       $fqs = array();
       array_push($fqs, "type:\"edanmdm\"");
+      if(array_key_exists('fqs', $edan_vars))
+      {
+        foreach($edan_vars['fqs'] as $fq)
+        {
+          $fq = explode(':', $fq, 2);
+          if(count($fq) < 2)
+          {
+            continue;
+          }
+          array_push($fqs, $fq[0] . ":\"" . str_replace(' ', '+', $fq[1]) . "\"");
+        }
+      }
 
       if($edan_fqs && $issearch)
       {
@@ -74,7 +89,10 @@
 
           array_push($fqs, $fq[0] . ":\"" . str_replace(' ', '+', $fq[1]) . "\"");
         }
+      }
 
+      if(count($fqs) > 0)
+      {
         $uri_string .= '&fqs=' . json_encode($fqs);
       }
 

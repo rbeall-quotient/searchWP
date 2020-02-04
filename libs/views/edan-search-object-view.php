@@ -39,7 +39,7 @@
           return $this->get_collection_object();
         }
 
-        $content .= '<div class="obj-header">';
+        $content .= '<div class="edan-search-obj-header">';
 
         $media =  $this->get_media_content($this->object);
         $content .= $media['content'];
@@ -194,21 +194,20 @@
 
       if(property_exists($this->object->{'content'}, 'freetext'))
       {
-        $labels = $this->compile_field_values($this->object->{'content'}->{'freetext'});
+        $labels = $this->compile_field_values();
 
         $content .= "<div class=\"edan-search-object-view-fields\">";
 
         foreach($labels as $key => $vals)
         {
-            console_log("object field values: " . json_encode($vals));
-            $content .= '<div class="edan-search-object-view-field-label edan-search-object-view-field-label.' . $key .'">'. $this->options->replace_label($key) . '</div>';
-
-            foreach($vals as $txt)
+            foreach($vals as $k=>$txt)
             {
-              $content .= '<div class="edan-search-object-view-field-content edan-search-object-view-field-label.' . $key . '">' . $txt . '</div>';
+              $content .= '<div class="edan-search-object-view-field-label edan-search-object-view-field-label-' . $key .'">'. $this->options->replace_label($k) . '</div>';
+              foreach($txt as $t)
+              {
+                $content .= '<div class="edan-search-object-view-field-content edan-search-object-view-field-content-' . $key . '">' . $t . '</div>';
+              }
             }
-
-            $content .= '<br/>';
         }
 
         $content .= "</div>";
@@ -218,7 +217,7 @@
     }
 
     /**
-     * compile a two dimensional array that stores all lines offield text as
+     * compile a two dimensional array that stores all lines of field text as
      * separate array entries under their corresponding label.
      * @return [type] [description]
      */
@@ -230,16 +229,16 @@
 
       foreach($freetext as $key => $val)
       {
-        //$display[$key] = array();
+        $display[$key] = [];
 
         foreach($val as $set)
         {
-          if(!array_key_exists($set->{'label'}, $display))
+          if(!array_key_exists($set->{'label'}, $display[$key]))
           {
-            $display[$set->{'label'}] = array();
+            $display[$key][$set->{'label'}] = array();
           }
 
-          array_push($display[$set->{'label'}], $set->{'content'});
+          array_push($display[$key][$set->{'label'}], $set->{'content'});
         }
       }
 
