@@ -446,30 +446,31 @@
           if(!$this->options->is_minimized())
           {
             $fieldclass = $field;
-            $display = 'block';
+            $dataset = "no";
           }
           elseif($this->options->get_mini($field))
           {
             $fieldclass = "edan-search-object-fields";
-            $display = 'none';
+            $dataset = "yes";
           }
           else
           {
             $fieldclass = 'mini';
-            $display = 'block';
+            $dataset = "no";
           }
 
           $fieldclass .= " edan-search-field-$field";
 
-          $content .= "<div id=\"$field\" class=\"" . $fieldclass . "\" style=\"display:$display\">";
+          //$content .= "<div id=\"$field\" class=\"" . $fieldclass . "\" style=\"display:$display\">";
+          $content .= "<div id=\"$field\" class=\"" . $fieldclass . "\" data-minimized=\"$dataset\">";
 
           foreach($vals as $label => $lns)
           {
-            $content .= '<div class="edan-search-label-' . str_replace(" ", "-", $label) . '">'. $this->options->replace_label($label) . '</div>';
+            $content .= '<div class="edan-search-label">'. $this->options->replace_label($label) . '</div>';
 
             foreach($lns as $txt)
             {
-              $content .= '<div class="edan-search-field-content-' . str_replace(" ", "-", $label) . '">' . $txt . '</div>';
+              $content .= '<div class="edan-search-field-content">' . $txt . '</div>';
             }
           }
           $content .= "</div>";
@@ -530,11 +531,11 @@
 
         if(!$this->options->is_minimized())
         {
-          $display = 'display:block';
+          $dataset = "no";
         }
         else
         {
-          $display = 'display:none';
+          $dataset = "yes";
         }
 
         $css .= " edan-search-media-anchor ";
@@ -578,7 +579,8 @@
           $alt .= "media object $index of $mediaCount for record $title";
         }
         $media_usage = $this->get_media_usage_class($m);
-        $content .= "<a class=\"$css $media_usage\" href=\"$src\" alt=\"$alt\" style=\"$display\">";
+        //$content .= "<a class=\"$css $media_usage\" href=\"$src\" alt=\"$alt\" style=\"$display\">";
+        $content .= "<a class=\"$css $media_usage\" href=\"$src\" alt=\"$alt\" data-minimized=\"$dataset\">";
         if($type == "Images")
         {
           if($thumbnail)

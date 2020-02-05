@@ -164,14 +164,16 @@
           $imageExists = true;
           if($index == 1)
           {
+            $dataset = "no";
             $disp = "display:block";
           }
           else
           {
+            $dataset = "yes";
             $disp = "display:none";
           }
 
-          $res["content"] .= "<div id=\"displayMedia$index\" style=\"$disp\" class=\"edan-search-object-view-image-media $media_usage_class\">";
+          $res["content"] .= "<div id=\"displayMedia$index\" data-hidden=\"$dataset\" class=\"edan-search-object-view-image-media $media_usage_class\">";
 
           if(strpos($m->{'content'}, 'ids.si.edu') != false)
           {

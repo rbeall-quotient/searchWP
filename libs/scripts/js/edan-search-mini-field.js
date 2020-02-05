@@ -1,3 +1,25 @@
+//setTimeout(setExpanders, 500);
+var interval = setInterval(setExpanders, 10);
+
+function setExpanders()
+{
+    //display or minimize all minimizable fields
+    var fields = document.getElementsByClassName('edan-search-object-fields');
+
+    for(i = 0; i < fields.length; i++)
+    {
+      if(fields[i].dataset.minimized == "yes")
+      {
+        fields[i].style.display = "none";
+      }
+    }
+
+    if(fields.length > 0)
+    {
+      clearInterval(interval);
+    }
+}
+
 /**
  * Hide or reveal non-mini elements.
  * @param  {[string]}  classname class name for non-mini classes
@@ -97,6 +119,7 @@ function toggle_all()
     }
   }
 
+  console.log("Length of fields for function call: " + fields.length);
   //display or minimize all minimizable fields
   for(i = 0; i < fields.length; i++)
   {

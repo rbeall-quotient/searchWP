@@ -1,6 +1,32 @@
+//var interval = setInterval(setImages, 10);
+
+setTimeout(setImages, 50);
+
+function setImages()
+{
+  var images = document.getElementsByClassName('edan-search-object-view-image-media');
+
+  for(i = 0; i < images.length; i++)
+  {
+    if(images[i].dataset.hidden == "yes")
+    {
+      images[i].style.display = "none";
+    }
+    else
+    {
+      images[i].style.display = "block";
+    }
+  }
+
+  /*if(images.length > 0)
+  {
+    console.log("clear interval");
+    clearInterval(interval);
+  }*/
+}
+
 function mediaNext()
 {
-  console.log("Media Next...");
   var total = document.getElementById("visualMediaCount").value;
   var index = document.getElementById("visualMediaIndex").value;
 
