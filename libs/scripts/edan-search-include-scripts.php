@@ -19,39 +19,7 @@
    */
   function edan_search_include_object_group_scripts()
   {
-    $cssdir = 'wp-content/plugins/edanSearchWP/libs/scripts/css';
-    $jsdir = 'wp-content/plugins/edanSearchWP/libs/scripts/js';
-
-    $css_files = edan_search_get_directory_files($cssdir, ".css");
-    $js_files = edan_search_get_directory_files($jsdir, ".js");
-
-    foreach($css_files as $f)
-    {
-      wp_enqueue_style($f, plugin_dir_url(__FILE__) . "css/$f");
-    }
-
-    foreach($js_files as $f)
-    {
-      wp_enqueue_script($f, plugin_dir_url(__FILE__) . "js/$f");
-    }
-  }
-
-  function edan_search_get_directory_files($path, $ext)
-  {
-    $files = array();
-
-    if ($dir = opendir($path))
-    {
-      while (false !== ($entry = readdir($dir)))
-      {
-        if ($entry != "." && $entry != ".." && strpos($entry, $ext) !== false)
-        {
-          array_push($files, $entry);
-        }
-      }
-      closedir($handle);
-    }
-
-    return $files;
+    wp_enqueue_style("edan-search.css", plugin_dir_url(__FILE__) . "css/edan-search.css");
+    wp_enqueue_script("edan-search.js", plugin_dir_url(__FILE__) . "js/edan-search.js");
   }
 ?>

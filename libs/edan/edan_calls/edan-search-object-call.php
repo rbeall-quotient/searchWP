@@ -15,7 +15,7 @@
      *
      * @return array object json
      */
-    function get()
+    function get($edanURL=NULL)
     {
       //if edan search data is already cached, return cached value
       if(wp_cache_get('edan_search_cache'))
@@ -35,8 +35,15 @@
         }
       }
 
+      $url = get_query_var('edanUrl');
+
+      if($edanURL)
+      {
+        $url = $edanURL;
+      }
+
       $obj_vars = array(
-        'url' => get_query_var('edanUrl'),
+        'url' => $url,
       );
 
       $results['object'] = json_decode($this->edan->edan_call($obj_vars, $this->service));

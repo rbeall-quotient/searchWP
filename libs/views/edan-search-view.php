@@ -10,11 +10,14 @@
      *
      * @param array $cache set of edan search json
      */
-    function __construct($cache)
+    function __construct($cache, $ini = False, $hidesearch = False, $hideresults = False,  $hidefacets = False)
     {
       $this->url_handler = new esw_url_handler();
       $this->options = new esw_options_handler();
-
+      $this->initialResults = $ini;
+      $this->hidesearch = $hidesearch;
+      $this->hideresults = $hideresults;
+      $this->hidefacets = $hidefacets;
       $this->results = $cache['search'];
     }
 
@@ -40,17 +43,32 @@
       {
         $facets = new edan_facet_view($this->results);
 
-        $content  = '<div style="width: 100%; overflow: hidden;">';
-        $content .= $this->get_search_bar();
-        if(get_query_var("edan_q") || get_query_var("edanUrl"))
+        $content  = '<div class="edan-search-display-section">';
+
+        if(!$this->hidesearch)
         {
-          $content .= '<div style="width: 65%; float: left;">';
+          $content .= $this->get_search_bar();
+        }
+
+        if(($this->initialResults || get_query_var('edan_q')) && !$this->hideresults)
+        {
+          $content .= '<div class="edan-search-results-block">';
           $content .= $this->get_top_nav();
           $content .= $this->get_object_list();
           $content .= $this->get_bottom_nav();
           $content .= '</div>';
-          $content .= '<div style="float: right;"><div>'.$facets->get_content().'</div></div>';
+
+          if(!$this->hidefacets)
+          {
+            $content .= '<div class="edan-search-facets-side-bar"><div>'.$facets->get_content().'</div></div>';
+          }
         }
+
+        if($this->hideresults && !$this->hidefacets)
+        {
+          $content .= "<div class=\"edan-search-facets-full-view\">" .$facets->get_content() . "</div>";
+        }
+
         $content .= '</div>';
 
         return $content;
@@ -307,19 +325,29 @@
      */
     function get_object_list()
     {
-      $content  = '<ul style="list-style:none;">';
       $obs      = $this->results->{'rows'};
       $index    = 0;
 
-      foreach($obs as $row)
+      if(count($obs) > 0)
       {
-        if($row->{'type'} != 'objectgroup')
+        $content  = '<ul style="list-style:none;">';
+        foreach($obs as $row)
         {
-          $content .= $this->get_object($row->{'content'}, $row->{'url'}, $index++) . '<br/>';
+          if($row->{'type'} != 'objectgroup')
+          {
+            $content .= $this->get_object($row->{'content'}, $row->{'url'}, $index++) . '<br/>';
+          }
         }
+
+        $content .= '</ul>';
+      }
+      else
+      {
+        $q = get_query_var('edan_q');
+        $q = str_replace('+', ' ', $q);
+        return "<div>No Results Returned For \"$q\"</div>";
       }
 
-      $content .= '</ul>';
 
       return $content;
     }
@@ -345,7 +373,6 @@
       }
 
       $media = $this->get_media_section($object);
-      //$content .= json_encode($media);
 
       if($media)
       {
@@ -354,11 +381,8 @@
           if(property_exists($m, 'type') && $m->{'type'} == "Images")
           {
             $media_usage = $this->get_media_usage_class($m);
-            if(property_exists($m, 'thumbnail'))
-            {
-              $src = $m->{'thumbnail'};
-            }
-            elseif(property_exists($m, 'content'))
+
+            if(property_exists($m, 'content'))
             {
               $src = $m->{'content'};
             }
@@ -367,7 +391,18 @@
               $src = "";
             }
 
-            $content .= "<img src=\"$src\" class=\"$media_usage\"/>";
+            $alt = "";
+
+            if(property_exists($m, 'caption'))
+            {
+              $alt = $m->{'caption'} . " header picture";
+            }
+            else
+            {
+              $alt = $this->get_object_title($object) . " header picture";
+            }
+
+            $content .= "<img src=\"$src\" class=\"edan-search-list-object-header-image $media_usage\" alt=\"$alt\" />";
             break;
           }
         }
@@ -507,6 +542,11 @@
           $index++;
           continue;
         }
+        $type = NULL;
+        $src = NULL;
+        $caption = NULL;
+        $thumbnail = NULL;
+
         if(property_exists($m, 'type'))
         {
           $type = $m->{'type'};
@@ -579,17 +619,12 @@
           $alt .= "media object $index of $mediaCount for record $title";
         }
         $media_usage = $this->get_media_usage_class($m);
-        //$content .= "<a class=\"$css $media_usage\" href=\"$src\" alt=\"$alt\" style=\"$display\">";
         $content .= "<a class=\"$css $media_usage\" href=\"$src\" alt=\"$alt\" data-minimized=\"$dataset\">";
         if($type == "Images")
         {
-          if($thumbnail)
+          if($src)
           {
-            $content .= "<img src=\"$thumbnail\" />";
-          }
-          else
-          {
-            $content .= "<img src=\"$content\" />";
+            $content .= "<img src=\"$src\" class=\"edan-search-object-list-bottom-media-image\" alt=\"$alt display image\"/>";
           }
         }
         else
@@ -638,6 +673,22 @@
         }
       }
       return "";
+    }
+
+    function get_object_title($object)
+    {
+      $title = "";
+
+      if(property_exists($object, 'title'))
+      {
+        return $object->title;
+      }
+      elseif(property_exists($object, 'descriptiveNonRepeating') && property_exists($object->{'descriptiveNonRepeating'}, 'title') && property_exists($object->{'descriptiveNonRepeating'}->{'title'}, 'content'))
+      {
+        return $object->{'descriptiveNonRepeating'}->{'title'}->{'content'};
+      }
+
+      return $title;
     }
 }
 ?>

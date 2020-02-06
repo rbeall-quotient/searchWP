@@ -45,10 +45,8 @@
 
           foreach($edan_fqs as $fq)
           {
-            console_log("FQ: $fq");
             if($fq != "type:edanmdm")
             {
-              console_log("Show remove is not edanmdm");
               $showRemove = True;
             }
           }

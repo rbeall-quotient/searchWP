@@ -9,11 +9,12 @@
      *
      * @param array $cache set of edan json
      */
-    function __construct($cache)
+    function __construct($cache, $nosearch = False)
     {
       $this->options = new esw_options_handler();
       $this->object = $cache['object'];
       $this->search = new edan_search_view($cache);
+      $this->nosearch = $nosearch;
     }
 
     /**
@@ -26,7 +27,11 @@
     {
       //return "<div>hello world</div>";
       $content = '';
-      $content .= $this->search->get_search_bar();
+
+      if(!$this->nosearch)
+      {
+        $content .= $this->search->get_search_bar();
+      }
 
       try
       {
@@ -89,7 +94,6 @@
       $index = 0;
       foreach($media as $m)
       {
-        //echo json_encode($m);
         $index++;
         if(property_exists($m, 'content'))
         {
@@ -118,7 +122,7 @@
           if(property_exists($m, 'thumbnail'))
           {
             $thumbnail = $m->{'thumbnail'};
-            $content .= "<img src=\"$thumbnail\" class=\"edan-search-non-image-media-thumbnail\" />";
+            $content .= "<img src=\"$thumbnail\" class=\"edan-search-non-image-media-thumbnail\" alt=\"$caption-thumbnail\"/>";
           }
 
           $content .= "$caption</a></div>";
@@ -175,15 +179,9 @@
 
           $res["content"] .= "<div id=\"displayMedia$index\" data-hidden=\"$dataset\" class=\"edan-search-object-view-image-media $media_usage_class\">";
 
-          if(strpos($m->{'content'}, 'ids.si.edu') != false)
-          {
-            $src = str_replace('deliveryService', 'dynamic', $m->{'content'});
-            $res['content'] .= "<iframe src=\"$src\" width=\"1500\" height=\"750\"></iframe>";
-          }
-          else
-          {
-            $res['content'] .= "<img src=\"" . $m->{'content'} . "\" />";
-          }
+          $src = $m->{'content'};
+          $alt = $this->get_title() . " image media $index";
+          $res['content'] .= "<iframe id=\"displayMediaIframe$index\" src=\"$src\" width=\"1500\" height=\"750\" alt=\"$alt\"></iframe>";
 
           $res["content"] .= "</div>";
         }
@@ -195,11 +193,9 @@
 
       if($imageExists)
       {
-        $res['content'] .= "<input type=\"hidden\" id=\"visualMediaCount\" value=\"$index\"></input>";
-        $res['content'] .= "<input type=\"hidden\" id=\"visualMediaIndex\" value=\"1\"></input>";
         if($index > 1)
         {
-          $res['content'] .= "<div><span><a id=\"mediaPrev\" href=\"#\" onclick=\"mediaPrevious()\" style=\"display:none\">previous</a><span><span id=\"mediaIndex\">1</span>/$mediaCount</span><a id=\"mediaNext\" href=\"#\" onclick=\"mediaNext()\">Next</a></span></div>";
+          $res['content'] .= "<div><span><a id=\"mediaPrev\" href=\"#\" onclick=\"mediaPrevious()\" style=\"display:none\">previous</a><span id=\"mediaIndex\">1/$mediaCount</span><a id=\"mediaNext\" href=\"#\" onclick=\"mediaNext()\">Next</a></span></div>";
         }
       }
 
@@ -305,7 +301,6 @@
       }
       else
       {
-        console_log("null");
         return null;
       }
     }

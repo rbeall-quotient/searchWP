@@ -11,7 +11,7 @@
      * return array of edan json objects
      * @return array set of edan json
      */
-    function get($fq = NULL)
+    function get($fq = NULL, $edanQ = NULL)
     {
       if(get_query_var('edanUrl'))
       {
@@ -21,7 +21,7 @@
       else
       {
         $search_call = new edan_search_call();
-        return $search_call->get($fq);
+        return $search_call->get($fq, $edanQ);
       }
     }
   }

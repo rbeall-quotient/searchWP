@@ -15,7 +15,10 @@
     {
       $this->options = get_option('edan_search_settings');
 
-      $this->config  = $this->options['config'];
+      $this->edanserver = $this->options['edanserver'];
+      $this->appid = $this->options['appid'];
+      $this->authkey = $this->options['authkey'];
+      $this->tiertype = $this->options['tiertype'];
       $this->fnames  = $this->options['fnames'];
       $this->hfacets = $this->options['hfacets'];
       $this->fields  = $this->options['fields'];
@@ -26,28 +29,41 @@
     /**
      * Get site creds
      *
-     * @return string site creds
+     * @return string edan server
      */
-    function get_creds()
+    function get_edan_server()
     {
-      return $this->options['creds'];
+      return trim($this->edanserver);
     }
 
     /**
-     * Get parsed config array
+     * Get site creds
      *
-     * @return array array of edan config values
+     * @return string app id
      */
-    function get_config()
+    function get_app_id()
     {
-      $conf = parse_ini_string($this->config, TRUE);
+      return trim($this->appid);
+    }
 
-      if($conf)
-      {
-        return $conf;
-      }
+    /**
+     * Get auth key
+     *
+     * @return string auth key
+     */
+    function get_auth_key()
+    {
+      return trim($this->authkey);
+    }
 
-      return array();
+    /**
+     * Get tier type
+     *
+     * @return string tiertype
+     */
+    function get_tier_type()
+    {
+      return trim($this->tiertype);
     }
 
     /**

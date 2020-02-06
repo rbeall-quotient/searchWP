@@ -19,7 +19,7 @@
      * Function to retrieve objectGroup.
      * @return array array containing object group json or false on failure
      */
-    function get($fqs=NULL)
+    function get($fqs=NULL, $edanQ=NULL)
     {
       //if edan search data is already cached, return cached value
       if(wp_cache_get('edan_search_cache'))
@@ -50,7 +50,11 @@
         $vars['fqs'] = $fqs;
       }
 
-      if(get_query_var('edan_q'))
+      if($edanQ)
+      {
+        $vars['q'] = $edanQ;
+      }
+      elseif(get_query_var('edan_q'))
       {
         $vars['q'] = get_query_var('edan_q');
       }

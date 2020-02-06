@@ -19,31 +19,7 @@
     {
       //get creds from options_handler
       $options = new esw_options_handler();
-
-      $config = $options->get_config();
-
-      $edan_vars['creds'] = $options->get_creds();
       $_GET   = array();
-
-      if (isset($edan_vars['creds']))
-      {
-        if (empty($edan_vars['creds']))
-        {
-          console_error('Empty creds');
-          return false;
-        }
-
-        if(!isset($config[$edan_vars['creds']]))
-        {
-          console_error('Invalid creds specified. Check your config.');
-          return false;
-        }
-        else
-        {
-          $config = $config[ $edan_vars['creds']];
-          unset($edan_vars['creds']);
-        }
-      }
 
       $uri_string = "";
       $COUNT=0;
@@ -97,8 +73,8 @@
       }
 
       // Execute
-      $edan = new EDANInterface($config['edan_server'], $config['edan_app_id'], $config['edan_auth_key'], $config['edan_tier_type']);
-
+      $edan = new EDANInterface($options->get_edan_server(), $options->get_app_id(), $options->get_auth_key(), $options->get_tier_type());
+      
       // Response
       $info = '';
       $results = $edan->sendRequest($uri_string, $service, FALSE, $info);

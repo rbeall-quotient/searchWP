@@ -26,13 +26,27 @@
     register_setting( 'edan_search_option_group', 'edan_search_settings', 'edan_search_sanitize_values' );
   }
 
+  function get_selected($value, $compare)
+  {
+    if($value == $compare)
+    {
+      return " selected ";
+    }
+    else
+    {
+      return "";
+    }
+  }
+
   function edan_search_update_options()
   {
     if(!get_option('edan_search_settings'))
     {
       $options = array(
-        'creds' => '',
-        'config' => '',
+        'edanserver' => '',
+        'appid' => '',
+        'authkey' => '',
+        'tiertype' => '',
         'path' => '',
         'title' => '',
         'resultsmessage' => '',
@@ -70,7 +84,6 @@
    function edan_search_admin_menu()
    {
    	$settings = get_option( 'edan_search_settings' );
-    console_log("TYPE: " . gettype($settings));
    	?>
     <h1>EDAN Search Settings</h1>
     <br/><br>
@@ -78,22 +91,37 @@
    		<?php settings_fields( 'edan_search_option_group' ); ?>
       <fieldset>
         <legend class="edan-search-header"><strong>EDAN Search Configuration:</strong></legend><br/>
-        <div class=edan-search-field-label>Creds:</div>
+        <div class=edan-search-field-label>EDAN Server:</div>
         <div>
-          <input type="text" name="edan_search_settings[creds]" value="<?php echo $settings[ 'creds' ]; ?>" />
-          <div class="edan-search-description">Enter creds for the specific repository</div>
+          <input type="text" name="edan_search_settings[edanserver]" value="<?php echo $settings[ 'edanserver' ]; ?>" />
+          <div class="edan-search-description">Enter the EDAN Server URL</div>
         </div>
         <br/>
-        <div class=edan-search-field-label>Config</div>
+        <div class=edan-search-field-label>EDAN App ID:</div>
         <div>
-          <textarea form ="edan-search-admin" name="edan_search_settings[config]" id="config" cols="100"><?php echo $settings[ 'config' ]; ?></textarea>
-          <div class="edan-search-description">Use this box to copy and paste the edan .config.ini information</div>
+          <input type="text" name="edan_search_settings[appid]" value="<?php echo $settings[ 'appid' ]; ?>" />
+          <div class="edan-search-description">Enter the EDAN App ID</div>
+        </div>
+        <br/>
+        <div class=edan-search-field-label>EDAN Auth Key:</div>
+        <div>
+          <input type="text" name="edan_search_settings[authkey]" value="<?php echo $settings[ 'authkey' ]; ?>" />
+          <div class="edan-search-description">Enter the EDAN Auth Key</div>
+        </div>
+        <br/>
+        <div class=edan-search-field-label>EDAN Tier Type:</div>
+        <div>
+          <select name="edan_search_settings[tiertype]" value="<?php echo $settings[ 'tiertype' ]; ?>">
+            <option value="1" <?php echo get_selected("1", $settings[ 'tiertype' ]); ?>>1</option>
+            <option value="2" <?php echo get_selected("2", $settings[ 'tiertype' ]); ?>>2</option>
+          </select>
+          <div class="edan-search-description">Enter the EDAN Tier Type</div>
         </div>
         <br/>
         <div class=edan-search-field-label>EDAN Search Path:</div>
         <div>
           <input type="text" name="edan_search_settings[path]" value="<?php echo $settings[ 'path' ] ?>" />
-          <div class="edan-search-description">The base path for object group pages. If the Pathauto module is installed, those settings may override the base path.</div>
+          <div class="edan-search-description">The base path for edan object pages.</div>
         </div>
         <br/>
         <div class=edan-search-field-label>EDAN Search Title:</div>

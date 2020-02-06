@@ -11,7 +11,7 @@
      *
      * @return string edan search content
      */
-    function get_content($fqs = NULL)
+    function get_content($fqs = NULL, $ini = False, $edanQ = NULL, $hidesearch = False, $hideresults = False, $hidefacets = False)
     {
       //check if jsonDump set
       if(get_query_var('jsonDump'))
@@ -30,7 +30,7 @@
         else
         {
           //otherwise, serve search bar and results (if applicable)
-          $view = new edan_search_view($call->get($fqs));
+          $view = new edan_search_view($call->get($fqs, $edanQ), $ini, $hidesearch, $hideresults, $hidefacets);
         }
 
         //serve up gathered content

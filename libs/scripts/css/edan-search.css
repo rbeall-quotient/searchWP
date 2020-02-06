@@ -26,3 +26,32 @@
   margin-bottom: 20px;
   padding-left: 20px;
 }
+
+ul.edan-search-navbar
+{
+  list-style: none;
+  text-align: left;
+}
+
+li.edan-search-navbar
+{
+  display: inline-block;
+  padding: 5px;
+}
+
+.edan-search-facets-side-bar
+{
+  float:right;
+}
+
+.edan-search-results-block
+{
+  width: 65%;
+  float: left;
+}
+
+.edan-search-display-section
+{
+  width: 100%;
+  overflow: hidden;
+}

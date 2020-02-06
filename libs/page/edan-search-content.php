@@ -15,7 +15,8 @@
     //get options from admin menu and plug them into the options handler
     $options = new esw_options_handler();
 
-    /*Using stripped down url instead of page title because we
+    /*
+    * Using stripped down url instead of page title because we
     * we are changing the title and this title filter might be called before
     * we access content.
     */

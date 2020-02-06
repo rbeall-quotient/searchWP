@@ -83,8 +83,8 @@
      */
     function list_url($listStart)
     {
-      $url  = $this->get_url();
-
+      //$url  = $this->get_url();
+      $url = "";
       $vars = array(
         'objectGroupUrl' => get_query_var('objectGroupUrl'),
         'pageUrl' => get_query_var('pageUrl'),
@@ -106,8 +106,8 @@
      */
     function add_facet_url($key, $filter)
     {
-      $url  = $this->get_url();
-
+      //$url  = $this->get_url();
+      $url = "";
       $vars = array(
         'objectGroupUrl' => get_query_var('objectGroupUrl'),
         'pageUrl' => get_query_var('pageUrl'),
@@ -128,8 +128,8 @@
      */
     function remove_facet_url($facet)
     {
-      $url  = $this->get_url();
-
+      //$url  = $this->get_url();
+      $url = "";
       $vars = array(
         'objectGroupUrl' => get_query_var('objectGroupUrl'),
         'pageUrl' => get_query_var('pageUrl'),
@@ -152,7 +152,7 @@
     {
       $options = new esw_options_handler();
 
-      $url = $this->get_url();
+      $url = "";
       $vars = array(
         'edanUrl' => $edanUrl,
       );

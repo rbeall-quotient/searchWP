@@ -13,14 +13,24 @@
      */
     function sanitize($options)
     {
-      if(!array_key_exists('creds', $options))
+      if(!array_key_exists('edanserver', $options))
       {
-        $options['creds'] = '';
+        $options['edanserver'] = '';
       }
 
-      if(!array_key_exists('config', $options))
+      if(!array_key_exists('appid', $options))
       {
-        $options['config'] = '';
+        $options['appid'] = '';
+      }
+
+      if(!array_key_exists('authkey', $options))
+      {
+        $options['authkey'] = '';
+      }
+
+      if(!array_key_exists('tiertype', $options))
+      {
+        $options['tiertype'] = '';
       }
 
       if(!array_key_exists('path', $options))
